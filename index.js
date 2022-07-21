@@ -32,7 +32,8 @@ app.get("/", async (req, res) => {
         range: `${tabName}!A:E`,
         valueInputOption: "USER_ENTERED",
         resource: {
-            values: [["Request Title","Request Type", "Request Body", "Response Code","Response Latency"]],
+            values: [["Request Title","Request Type", "Request Body", "Response Code","Response Latency","Response Status"]],
+            
         },
     });
 
@@ -49,7 +50,7 @@ app.get("/", async (req, res) => {
             if (error) {
                 console.error(error);
             } else {
-                var raw
+                var raw;
                 if(args.request.method!=="GET" && args.request.method!=="DELETE"){
 
                     raw = args.request.body.raw
@@ -65,7 +66,7 @@ app.get("/", async (req, res) => {
                     range: `${tabName}!A:E`,
                     valueInputOption: "USER_ENTERED",
                     resource: {
-                        values: [[args.item.name, args.request.method, raw,args.response.code, args.response.responseTime]],
+                        values: [[args.item.name, args.request.method, raw,args.response.code, args.response.responseTime, args.response.status]],
                     },
                 });
 
