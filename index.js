@@ -2,13 +2,9 @@ const express = require("express");
 const { google } = require("googleapis");
 const newman = require('newman');
 
-
-
 const app = express();
 
 app.get("/", async (req, res) => {
-
-
 
     const auth = new google.auth.GoogleAuth({
         keyFile: "credentials.json",
@@ -19,7 +15,7 @@ app.get("/", async (req, res) => {
     const spreadsheetId = "13MZayW78EVBIKMKR8eQSR4kp6-_A4hzg0Dtv9LSMHN8";
 
     const randNum = new Date().toLocaleString("tr", { timeZone: "Europe/Istanbul" })
-        .replaceAll(":", "").replaceAll(".", "").replaceAll(" ", "")
+        .replaceAll(":", "-").replaceAll(".", "-")
 
     const tabName = `TRFCloud${randNum}`;
 
@@ -84,4 +80,4 @@ async function appendData(googleSheets, auth, spreadsheetId, tabName, arr) {
     });
 }
 
-app.listen(1337, (req, res) => console.log("running 1337 port"))
+app.listen(1337, (req, res) => console.log("running port:1337 "))
