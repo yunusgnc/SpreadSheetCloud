@@ -14,14 +14,14 @@ app.get("/", async (req, res) => {
     const googleSheets = google.sheets({ version: "v4", auth: client });
     const spreadsheetId = "13MZayW78EVBIKMKR8eQSR4kp6-_A4hzg0Dtv9LSMHN8";
 
-    const randNum = new Date().toLocaleString("tr", { timeZone: "Europe/Istanbul" })
+    const nowDate = new Date().toLocaleString("tr", { timeZone: "Europe/Istanbul" })
         .replaceAll(":", "-").replaceAll(".", "-")
 
-    const tabName = `TRFCloud${randNum}`;
+    const tabName = `TFRCloud ${nowDate}`;
 
 
     await addSheet(client, spreadsheetId, tabName);
-    var dataTitle = ["Request Title", "Request Type", "Request Body", "Response Code", "Response Latency", "Response Status"];
+    var dataTitle = ["Request Title", "Request Type", "Request Body", "Response Code", "Response Latency", "Response Status","Request Date"];
     await appendData(googleSheets, auth, spreadsheetId, tabName, dataTitle)
     newman.run({
         collection: require('./collection.json'),
@@ -45,7 +45,8 @@ app.get("/", async (req, res) => {
                 else {
                     raw = "None"
                 }
-                var myData = [args.item.name, args.request.method, raw, args.response.code, args.response.responseTime, args.response.status]
+                let dateNow = new Date().toLocaleString("tr", { timeZone: "Europe/Istanbul" })
+                var myData = [args.item.name, args.request.method, raw, args.response.code, args.response.responseTime, args.response.status,dateNow]
                 await appendData(googleSheets, auth, spreadsheetId, tabName, myData)
             }
         })
