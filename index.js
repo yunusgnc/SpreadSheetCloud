@@ -25,18 +25,8 @@ app.get("/", async (req, res) => {
 
 
     await addSheet(client, spreadsheetId, tabName);
-
-    await googleSheets.spreadsheets.values.append({
-        auth,
-        spreadsheetId,
-        range: `${tabName}!A:E`,
-        valueInputOption: "USER_ENTERED",
-        resource: {
-            values: [["Request Title","Request Type", "Request Body", "Response Code","Response Latency","Response Status"]],
-            
-        },
-    });
-
+    var dataTitle = ["Request Title", "Request Type", "Request Body", "Response Code", "Response Latency", "Response Status"];
+    await appendData(googleSheets, auth, spreadsheetId, tabName, dataTitle)
     newman.run({
         collection: require('./collection.json'),
         reporters: 'cli',
@@ -50,26 +40,17 @@ app.get("/", async (req, res) => {
             if (error) {
                 console.error(error);
             } else {
+
                 var raw;
-                if(args.request.method!=="GET" && args.request.method!=="DELETE"){
 
+                if (args.request.method !== "GET" && args.request.method !== "DELETE") {
                     raw = args.request.body.raw
-
                 }
-                else{
+                else {
                     raw = "None"
-                    
                 }
-                await googleSheets.spreadsheets.values.append({
-                    auth,
-                    spreadsheetId,
-                    range: `${tabName}!A:E`,
-                    valueInputOption: "USER_ENTERED",
-                    resource: {
-                        values: [[args.item.name, args.request.method, raw,args.response.code, args.response.responseTime, args.response.status]],
-                    },
-                });
-
+                var myData = [args.item.name, args.request.method, raw, args.response.code, args.response.responseTime, args.response.status]
+                await appendData(googleSheets, auth, spreadsheetId, tabName, myData)
             }
         })
 
@@ -85,13 +66,22 @@ async function addSheet(auth, spreadsheetId, tabName) {
                 spreadsheetId: spreadsheetId,
                 resource: { requests: [{ addSheet: { properties: { title: tabName } } }] }
             });
-          
         }
     } catch (err) {
         console.log('Sheets API Error: ' + err);
     }
 }
 
-
+async function appendData(googleSheets, auth, spreadsheetId, tabName, arr) {
+    await googleSheets.spreadsheets.values.append({
+        auth,
+        spreadsheetId,
+        range: `${tabName}!A:E`,
+        valueInputOption: "USER_ENTERED",
+        resource: {
+            values: [arr],
+        },
+    });
+}
 
 app.listen(1337, (req, res) => console.log("running 1337 port"))
