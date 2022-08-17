@@ -19,9 +19,8 @@ app.get("/", async (req, res) => {
 
     const tabName = `TFRCloud ${nowDate}`;
 
-
     await addSheet(client, spreadsheetId, tabName);
-    var dataTitle = ["Request Title", "Request Type", "Request Body", "Response Code", "Response Latency", "Response Status","Request Date"];
+    const dataTitle = ["Request Title", "Request Type", "Request Body", "Response Code", "Response Latency", "Response Status","Request Date"];
     await appendData(googleSheets, auth, spreadsheetId, tabName, dataTitle)
     newman.run({
         collection: require('./collection.json'),
@@ -73,7 +72,7 @@ async function appendData(googleSheets, auth, spreadsheetId, tabName, arr) {
     await googleSheets.spreadsheets.values.append({
         auth,
         spreadsheetId,
-        range: `${tabName}!A:E`,
+        range: `${tabName}`,
         valueInputOption: "USER_ENTERED",
         resource: {
             values: [arr],
