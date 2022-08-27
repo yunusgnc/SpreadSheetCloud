@@ -60,10 +60,10 @@ app.get("/", async (req, res) => {
         var raw;
         console.log(args.response._details.detail);
         if (args.request.method !== "GET" && args.request.method !== "DELETE") {
-          delay(3000);
+          delay(1000);
           raw = args.request.body.raw;
         } else {
-          delay(3000);
+          delay(1000);
           raw = "None";
         }
         // sleep(2000);
@@ -94,7 +94,7 @@ function nowDateTime() {
   var day = ("0" + date_ob.getDate()).slice(-2);
   var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
   var year = date_ob.getFullYear();
-  delay(5000)
+  delay(1000)
   var date = year + "-" + month + "-" + day;
   console.log(date);
 
@@ -121,7 +121,7 @@ function nowDateTime() {
 async function addSheet(auth, spreadsheetId, tabName) {
   const api = google.sheets({ version: "v4", auth: auth });
   try {
-    delay(10000)
+    delay(1000)
     if (
       (
         await api.spreadsheets.get({ spreadsheetId: spreadsheetId })
@@ -136,7 +136,7 @@ async function addSheet(auth, spreadsheetId, tabName) {
       });
     }
   } catch (err) {
-    delay(10000)
+    delay(1000)
     console.log("Sheets API Error: " + err);
   }
 }
@@ -157,10 +157,10 @@ async function appendData(googleSheets, auth, spreadsheetId, tabName, arr) {
         values: [arr],
       },
     }).then(res=>{
-      delay(5000)
-      console.log(delay(4500),res)
+      delay(1000)
+      console.log(delay(1000),res)
     })
-  }, 5000);
+  }, 1000);
   
 }
 
